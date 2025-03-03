@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ড্রাইভ ইন্টারফেস</title>
+
+    <!-- Glyphicons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f4f4f4;
+        }
+        
+        
+        
+        /* হেডার */
+        .header {
+            display: flex;
+            align-items: center;
+            background-color: white;
+            padding: 15px;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: #eef1f5;
+            border-radius: 25px;
+            padding: 8px 15px;
+            position: relative;
+        }
+        
+        .menu-icon-left {
+            font-size: 22px;
+            cursor: pointer;
+            margin-right: 15px;
+        }
+        
+        .logo-icon {
+            width: 100%;
+            height: 30px;
+            border-radius: 50%;
+            margin-left: 15px;
+        }
+        
+        .search-box {
+            width: 100%;
+            height: 25px;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 16px;
+        }
+
+        /* নেভিগেশন ট্যাব */
+        .nav-tabs {
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 12px;
+            font-size: 16px;
+            border-bottom: 3px solid #ccc;
+        }
+        .nav-tabs div {
+            cursor: pointer;
+            padding: 8px 12px;
+        }
+        .active-tab {
+            border-bottom: 3px solid blue;
+            color: blue;
+            font-weight: bold;
+        }
+
+        /* ফাইল লিস্ট */
+        .file-list {
+            padding: 15px;
+        }
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 15px;
+            margin: 8px 0;
+            border-radius: 8px;
+            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .file-name {
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+        }
+        .file-name i {
+            font-size: 20px;
+            margin-right: 12px;
+        }
+        .file-name i {
+    color: #0099ff; /* নীল রঙ */
+}
+        .file-options {
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        /* ফ্লোটিং অ্যাকশন বাটন */
+        .fab-container {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .fab {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: white;
+            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        /* বটম নেভিগেশন */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            background: white;
+            padding: 12px 0;
+            box-shadow: 0px -3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .bottom-nav div {
+            text-align: center;
+            font-size: 14px;
+            color: gray;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 16px;
+        }
+        .bottom-nav div.active {
+            color: blue;
+            font-weight: bold;
+        }
+        .bottom-nav i {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        
+        
+        
+        /* সাইডবার ডিজাইন */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100%;
+            background: #f7fafc;
+            box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease-in-out;
+            z-index: 1000;
+            padding: 20px;
+            border-radius: 0px 15px 15px 0px;
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .sidebar-logo {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-logo img {
+            width: 24px;
+        }
+
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            text-decoration: none;
+            color: black;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .sidebar-menu a i {
+            font-size: 20px;
+            margin-right: 15px;
+            color: #606060;
+        }
+
+        .sidebar-menu a:hover {
+            background: #e3e7eb;
+        }
+
+        /* স্টোরেজ সেকশন */
+        .storage-section {
+            margin-top: 30px;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .storage-bar {
+            height: 6px;
+            width: 100%;
+            background: #e3e7eb;
+            border-radius: 3px;
+            margin-top: 8px;
+            position: relative;
+        }
+
+        .storage-bar-inner {
+            height: 100%;
+            width: 20%;
+            background: #1a73e8;
+            border-radius: 3px;
+        }
+
+        .storage-text {
+            font-size: 14px;
+            margin-top: 5px;
+            color: #606060;
+        }
+
+        .storage-btn {
+            display: block;
+            text-align: center;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #1a73e8;
+            color: #1a73e8;
+            font-size: 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .storage-btn:hover {
+            background: #1a73e8;
+            color: white;
+        }
+
+    
+    /* পপআপ উইন্ডোর ব্যাকগ্রাউন্ড (ব্লার ইফেক্ট সহ) */
+.popup {
+    display: none; /* ডিফল্টভাবে লুকানো থাকবে */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* ব্যাকগ্রাউন্ড ব্লার */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* পপআপ কনটেন্ট */
+.popup-content {
+    background: white;
+    padding: 20px;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+/* ক্লোজ বাটন ডিজাইন */
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #555;
+}
+
+.close-btn:hover {
+    color: red;
+}
+    
+    
+    
+    .popup-btn {
+    text-decoration: none; /* আন্ডারলাইন রিমুভ */
+    color: #000; /* কালো বা তোমার পছন্দের কালার */
+    background-color: #f1f1f1; /* ব্যাকগ্রাউন্ড রঙ */
+    padding: 10px 15px; /* বাটনের প্যাডিং */
+    border-radius: 5px; /* বাটনকে গোলাকার করো */
+    display: inline-block; /* বাটন হিসেবে দেখাবে */
+    text-align: center; /* টেক্সট ঠিকমতো বসবে */
+    font-weight: bold; /* টেক্সট মোটা হবে */
+}
+
+.popup-btn:hover {
+    background-color: #ddd; /* হোভার করলে কালার পরিবর্তন হবে */
+}
+.circle-logo {
+    width: 25px;  
+    height: 25px; 
+    border-radius: 50%; /* সম্পূর্ণ গোলাকার করবে */
+    object-fit: cover; /* লোগো পুরোপুরি কভার করবে */
+    display: block;
+}
+
+
+/* ফাইল লিস্ট কন্টেইনার */
+.file-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* প্রতিটি ফাইল আইটেম */
+.file-item {
+    display: flex;
+    flex-direction: column; /* আইকন উপরে, টেক্সট নিচে */
+    align-items: center;
+    text-decoration: none;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    width: 120px;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+/* ফাইল আইকন (ইমেজ) */
+.file-icon {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 8px;
+    border-radius: 50%; /* আইকন গোলাকার করা */
+}
+
+/* ফাইল টাইটেল (টেক্সট) */
+.file-item span {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* হোভার ইফেক্ট */
+.file-item:hover {
+    background: #e0e0e0;
+    transform: scale(1.05);
+}
+
+.active-tab {
+    display: flex;
+    justify-content: center; /* হরিজন্টালভাবে সেন্টারে আনতে */
+    align-items: center; /* ভার্টিকালভাবে সেন্টারে আনতে */
+    background-color: #fff; /* ব্যাকগ্রাউন্ড সাদা */
+    color: #000; /* টেক্সট কালার কালো */
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none; /* আন্ডারলাইন রিমুভ করতে */
+    width: 100%; /* সম্পূর্ণ চওড়া করে সেন্টারে দেখাতে */
+}
+
+/* যদি আইকন ব্যবহার করেন */
+.tab-logo {
+    width: 20px; /* আইকনের আকার ছোট */
+    height: 20px;
+    margin-right: 8px; /* আইকন ও টেক্সটের মাঝে গ্যাপ */
+}
+
+    </style>
+    <link rel="stylesheet" href="profile/profile.css">
+</head>
+<body>
+
+    <!-- হেডার -->
+    	
+
+    <header class="header">
+        <div class="search-container">
+            <span class="menu-icon-left" onclick="toggleSidebar()"><i class="fas fa-bars"></i></span>
+            <input type="text" class="search-box" placeholder="Search in Veta Calculator">
+            <a href="public/profile.html">
+    <img src="image/logo2.png" class="circle-logo" alt="Logo">
+</a>
+        </div>
+    </header>
+    
+
+
+    <!-- নেভিগেশন ট্যাব -->
+    <div class="active-tab">
+    <img src="image/logo.svg" alt="Logo" class="tab-logo">
+    Veta Calculator
+</div>
+
+    <!-- ফাইল লিস্ট -->
+<div class="file-list">
+    <a href="calculator/index.html" class="file-item">
+        <img src="image/calculator.png" class="file-icon" alt="appsheet">
+        <span>Calculator</span>
+    </a>
+
+    <a href="right_angle/index.html" class="file-item">
+        <img src="image/right-angle.png" class="file-icon" alt="Call list">
+        <span>Right Angle</span>
+    </a>
+
+    <a href="squarefoot/index.html" class="file-item">
+        <img src="image/a square mm 2 square foot.png" class="file-icon" alt="Contact">
+        <span>Square mm To Square foot</span>
+    </a>
+</div>
+
+   
+    
+    
+
+    <!-- বটম নেভিগেশন -->
+    <div class="bottom-nav">
+        <div class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-star"></i>
+            <span>Starred</span>
+        </div>
+        <div class="nav-item">
+            <i class="fas fa-users"></i>
+            <span>Shared</span>
+        </div>
+        <div class="nav-item active">
+            <i class="fas fa-folder"></i>
+            <span>Files</span>
+        </div>
+    </div>
+
+
+
+
+<!-- সাইডবার -->
+    <div class="sidebar" id="sidebar">
+        <span class="close-btn" onclick="toggleSidebar()"><i class="fas fa-times"></i></span>
+        
+        <div class="sidebar-logo">
+            <img src="image/logo.svg" alt="Google Drive">
+            Veta Calculator 
+        </div>
+        
+<!-- নিচে লাইন যুক্ত করলাম -->
+<hr class="sidebar-divider">
+
+        <div class="sidebar-menu">
+            <a href="#"><i class="fas fa-clock"></i> Recent</a>
+            <a href="#"><i class="fas fa-check-circle"></i> Offline</a>
+            <a href="#"><i class="fas fa-trash"></i> Bin</a>
+            <a href="#"><i class="fas fa-exclamation-circle"></i> Spam</a>
+            <a href="#"><i class="fas fa-cloud-upload-alt"></i> Backups</a>
+            <a href="#"><i class="fas fa-cog"></i> Settings</a>
+            <a href="#"><i class="fas fa-question-circle"></i> Help and feedback</a>
+            <a href="#"><i class="fas fa-hdd"></i> Storage</a>
+        </div>
+
+        <!-- স্টোরেজ -->
+        <div class="storage-section">
+            <div class="storage-text">33.7 MB of 15 GB used</div>
+            <div class="storage-bar">
+                <div class="storage-bar-inner"></div>
+            </div>
+            <div class="storage-btn">Get more storage</div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            sidebar.classList.toggle("open");
+        }
+        
+      
+    function openPopup(id) {
+        document.getElementById(id).style.display = "flex";
+    }
+
+    function closePopup(id) {
+        document.getElementById(id).style.display = "none";
+    }
+
+    </script>
+    
+    <!-- JavaScript ফাইল লোড -->
+<script src="script.js"></script>
+</body>
+</html>
