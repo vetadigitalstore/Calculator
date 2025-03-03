@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <style>
+    /* General Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Body Styling */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    /* Calculator Styling */
+    .calculator {
+      background-color: #1e1e1e;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      width: 320px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    /* Header Styling */
+    header {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      margin: 0;
+    }
+
+    /* Back Button Styling */
+    .back-button {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Display Styling */
+    .display {
+      background-color: #333;
+      color: white;
+      font-size: 2rem;
+      width: 100%;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: right;
+      margin-bottom: 20px;
+      min-height: 50px;
+      word-wrap: break-word;
+      overflow: hidden;
+      border: none;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* Button Grid */
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr); /* 4 buttons per row */
+      gap: 10px;
+      width: 100%;
+    }
+
+    /* Button Styling */
+    button {
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      padding: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      width: 100%;
+      height: 60px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    button:hover {
+      background-color: #555;
+      transform: scale(1.1);
+    }
+
+    button:active {
+      background-color: #666;
+      transform: scale(1);
+    }
+
+    /* Button Special Styling */
+    button:focus {
+      outline: none;
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    button:nth-child(4), 
+    button:nth-child(8), 
+    button:nth-child(12), 
+    button:nth-child(16) {
+      background-color: #3498db;
+    }
+
+    button:nth-child(4):hover, 
+    button:nth-child(8):hover, 
+    button:nth-child(12):hover, 
+    button:nth-child(16):hover {
+      background-color: #2980b9;
+    }
+
+    button:nth-child(4):active, 
+    button:nth-child(8):active, 
+    button:nth-child(12):active, 
+    button:nth-child(16):active {
+      background-color: #2980b9;
+    }
+
+    /* Styling for 0, . and = buttons */
+    .zero-button {
+      grid-column: span 2;  /* Make the 0 button span 2 columns */
+    }
+
+    .equal-button {
+      grid-column: span 2;  /* Make the = button span 2 columns */
+    }
+
+    .dot-button {
+      grid-column: span 1;  /* Keep the dot button in one column */
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <header>
+      <button class="back-button" onclick="goBack()">←</button>
+      <h1>VETA Calculator</h1>
+    </header>
+    <!-- Display element where calculation result is shown -->
+    <div class="display" id="display" contenteditable="true">0</div>
+    <div class="button-grid">
+      <!-- Row 1 -->
+      <button onclick="clearDisplay()">AC</button>
+      <button onclick="clearLast()">C</button>
+      <button onclick="appendValue('%')">%</button>
+      <button onclick="appendValue('/')">÷</button>
+      
+      <!-- Row 2 -->
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button onclick="appendValue('*')">x</button>
+      
+      <!-- Row 3 -->
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button onclick="appendValue('-')">-</button>
+      
+      <!-- Row 4 -->
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button onclick="appendValue('+')">+</button>
+      
+      <!-- Row 5 -->
+      <button class="zero-button" onclick="appendValue('0')">0</button>
+      <button class="dot-button" onclick="appendValue('.')">.</button>
+      <button class="equal-button" onclick="calculateResult()">=</button>
+    </div>
+  </div>
+
+  <script>
+    let display = document.getElementById('display');
+    let currentValue = '0';
+
+    // Function to append value to the display
+    function appendValue(value) {
+      // If the current value is '0' and the user is not typing a '.', replace it
+      if (currentValue === '0' && value !== '.') {
+        currentValue = value;
+      } else {
+        currentValue += value;
+      }
+      display.innerText = currentValue;
+    }
+
+    // Function to clear the display
+    function clearDisplay() {
+      currentValue = '0';
+      display.innerText = currentValue;
+    }
+
+    // Function to clear the last character entered
+    function clearLast() {
+      currentValue = currentValue.slice(0, -1); // Remove the last character
+      if (currentValue === '') {
+        currentValue = '0'; // Reset to '0' if the string is empty
+      }
+      display.innerText = currentValue;
+    }
+
+    // Function to calculate the result
+    function calculateResult() {
+      try {
+        currentValue = eval(currentValue).toString(); // Calculate the result
+        display.innerText = currentValue;
+      } catch (e) {
+        display.innerText = 'Error'; // In case of invalid calculation, show 'Error'
+      }
+    }
+
+    // Go back to the previous page
+    function goBack() {
+      window.history.back(); // Go back to the previous page
+    }
+
+    // Handle key press events (optional, if you want to handle keyboard input)
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        calculateResult();
+      } else if (event.key === 'Backspace') {
+        clearLast();
+      } else if (/[0-9+\-*/%().]/.test(event.key)) {
+        appendValue(event.key);
+      }
+    });
+  </script>
+</body>
+</html>
