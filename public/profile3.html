@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 8px 10px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .close-btn:hover {
+            background: #e60000;
+        }
+        .profile-header {
+            background: linear-gradient(135deg, #ff7e5f, #feb47b);
+            padding: 50px 20px 20px;
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            position: relative;
+        }
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #ff7e5f;
+            object-fit: cover;
+            display: block;
+            margin: -60px auto 10px;
+            background: white;
+        }
+        .user-details {
+            margin-top: 20px;
+            border: 2px solid #ff7e5f;
+            border-radius: 8px;
+            padding: 15px;
+            background: #fff5f0;
+        }
+        .user-details p {
+            margin: 10px 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #ffd1b3;
+            padding-bottom: 5px;
+        }
+        .user-details i {
+            margin-right: 10px;
+            color: #ff7e5f;
+            font-size: 18px;
+        }
+        .logout-btn, .link-btn {
+            display: block;
+            background: #ff4d4d;
+            color: white;
+            padding: 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: 0.3s;
+            margin-top: 15px;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+        }
+        .logout-btn:hover, .link-btn:hover {
+            background: #e60000;
+        }
+        
+        .qr-btn {
+    position: absolute;
+    top: 60px;
+    right: 75px;
+    background: white;
+    color: #ff7e5f;
+    border: 2px solid #ff7e5f;
+    padding: 5px 8px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.qr-btn:hover {
+    background: #ff7e5f;
+    color: white;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="close-btn" onclick="goBack()"><i class="fas fa-times"></i></button>
+
+        <div class="profile-header">
+            <img id="profileImage" class="profile-img" src="image/logo.svg" alt="Profile Image">
+            <a href="QRcode.html" class="qr-btn"><i class="fas fa-qrcode"></i></a>
+            <div class="user-name" id="userName">User Name</div>
+        </div>
+
+        <div class="user-details">
+            <p><i class="fa fa-id-badge"></i> <strong>ID:</strong> <span id="userId"></span></p>
+            <p><i class="fa fa-user"></i> <strong>Name:</strong> <span id="name"></span></p>
+            <p><i class="fa fa-calendar"></i> <strong>DOB:</strong> <span id="dob"></span></p>
+            <p><i class="fa fa-venus-mars"></i> <strong>Gender:</strong> <span id="gender"></span></p>
+            <p><i class="fa fa-envelope"></i> <strong>Email:</strong> <span id="email"></span></p>
+            <p><i class="fa fa-phone"></i> <strong>Mobile:</strong> <span id="mobile"></span></p>
+            <p><i class="fa fa-wallet"></i> <strong>Balance:</strong> <span id="balance"></span></p>
+        </div>
+
+        <button class="logout-btn" onclick="logout()">Logout</button>
+        <a href="edit-profile.html" class="link-btn">Update Your Profile</a>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let userData = localStorage.getItem("userData");
+
+            if (!userData) {
+                window.location.href = "login.html"; 
+            } else {
+                try {
+                    userData = JSON.parse(userData);
+                    console.log(userData); // কনসোলে ডাটা দেখার জন্য
+                    
+                    document.getElementById("userId").innerText = userData.id || "N/A";
+                    document.getElementById("profileImage").src = userData.profileImage ? userData.profileImage.replace("\\", "/") : "image/logo.svg";
+                    document.getElementById("userName").innerText = userData.name || "User Name";
+                    document.getElementById("name").innerText = userData.name || "N/A";
+                    document.getElementById("dob").innerText = userData.dob || "N/A";
+                    document.getElementById("gender").innerText = userData.gender || "N/A";
+                    document.getElementById("email").innerText = userData.email || "N/A";
+                    document.getElementById("mobile").innerText = userData.mobile || "N/A";
+                    
+                    // ব্যালেন্সের ফরম্যাট ঠিক করা হয়েছে
+                    let balance = userData.balance ? `$${userData.balance}` : "N/A";
+                    document.getElementById("balance").innerText = balance;
+
+                } catch (error) {
+                    console.error("Error parsing user data:", error);
+                    localStorage.removeItem("userData");
+                    window.location.href = "login.html";
+                }
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem("userData");
+            window.location.href = "login.html";
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>
+

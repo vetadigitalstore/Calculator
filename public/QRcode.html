@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f4f4f4;
+            flex-direction: column;
+            text-align: center;
+            position: relative;
+        }
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.15);
+            width: 90%;
+            max-width: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        #qrcode {
+            margin: 15px 0;
+        }
+        #qrUserName {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 3px;
+        }
+        #qrUserId {
+            font-size: 16px;
+            color: #555;
+            margin-top: 3px;
+        }
+        .copy-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            background: #007bff;
+            color: white;
+            transition: 0.3s;
+        }
+        .copy-btn:hover {
+            background: #0056b3;
+        }
+        .back-btn {
+            position: absolute;
+    top: 250px;
+    right: 85%;
+    background: white;
+    color: #ff7e5f;
+    border: 2px solid #ff7e5f;
+    padding: 5px 8px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.qr-btn:hover {
+    background: #ff7e5f;
+    color: white;
+}
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+
+    <div class="container">
+        <h1 style="font-size: 24px; display: flex; align-items: center; gap: 12px;">
+    <img src="image/logo.svg" alt="Veta Logo" style="width: 32px; height: 32px;"> Veta QR Code
+</h1>
+        <p id="qrUserName"></p> 
+        <div id="qrcode"></div>
+        <p id="qrUserId"></p>
+        <button class="copy-btn" onclick="copyUserId()">Copy ID</button>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let userData = localStorage.getItem("userData");
+
+            if (userData) {
+                try {
+                    userData = JSON.parse(userData);
+                    let userId = userData.id || "N/A";
+                    let userName = userData.name || "Unknown User";
+
+                    document.getElementById("qrUserName").innerText = userName;
+                    document.getElementById("qrUserId").innerText = "User ID: " + userId;
+                    document.getElementById("qrUserId").setAttribute("data-id", userId);
+
+                    let qrContainer = document.getElementById("qrcode");
+                    qrContainer.innerHTML = "";
+                    new QRCode(qrContainer, {
+                        text: userId,
+                        width: 150,
+                        height: 150
+                    });
+
+                } catch (error) {
+                    console.error("Error parsing user data:", error);
+                    localStorage.removeItem("userData");
+                    window.location.href = "login.html";
+                }
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        function copyUserId() {
+            let userId = document.getElementById("qrUserId").getAttribute("data-id");
+            if (userId && userId !== "N/A") {
+                navigator.clipboard.writeText(userId).then(() => {
+                    let copyBtn = document.querySelector(".copy-btn");
+                    copyBtn.innerText = "Copied!";
+                    setTimeout(() => { copyBtn.innerText = "Copy ID"; }, 2000);
+                }).catch(err => {
+                    console.error("Failed to copy:", err);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

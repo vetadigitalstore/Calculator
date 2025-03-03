@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #f4f4f4; padding: 20px; }
+        .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); width: 90%; max-width: 400px; position: relative; }
+        input, select, button { width: 95%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; }
+        button { background: #28a745; color: white; border: none; cursor: pointer; }
+        button:hover { background: #218838; }
+        .profile-container img { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd; }
+
+        /* ক্লোজ আইকনের স্টাইল */
+        .close-icon {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #ff0000;
+        }
+        .close-icon:hover {
+            color: #cc0000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ক্লোজ আইকন -->
+        <span class="close-icon" onclick="goBack()">❌</span>
+
+        <h2>Edit Profile</h2>
+        
+        <div class="profile-container">
+            <img id="profileImagePreview" src="image/logo.svg" alt="Profile Image">
+            <input type="file" id="profileImage" accept="image/*" onchange="previewImage(event)">
+        </div>
+
+        <input type="text" id="name" placeholder="Enter your name">
+        <input type="date" id="dob">
+        <select id="gender">
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+        <input type="email" id="email" placeholder="Enter your email">
+        <input type="tel" id="mobile" placeholder="Enter mobile number">
+
+        <button onclick="updateProfile()">Update Profile</button>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back(); // আগের পেজে ফিরে যাওয়া
+        }
+
+        // লগইন করা ইউজারের তথ্য লোড করা
+        let userData = JSON.parse(localStorage.getItem("userData"));
+        if (userData) {
+            document.getElementById("profileImagePreview").src = userData.profileImage || "image/logo.svg";
+            document.getElementById("name").value = userData.name;
+            document.getElementById("dob").value = userData.dob;
+            document.getElementById("gender").value = userData.gender;
+            document.getElementById("email").value = userData.email;
+            document.getElementById("mobile").value = userData.mobile;
+        }
+
+        function previewImage(event) {
+            let reader = new FileReader();
+            reader.onload = function () {
+                document.getElementById("profileImagePreview").src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function updateProfile() {
+            let updatedData = {
+                id: userData.id,
+                name: document.getElementById("name").value,
+                dob: document.getElementById("dob").value,
+                gender: document.getElementById("gender").value,
+                email: document.getElementById("email").value,
+                mobile: document.getElementById("mobile").value,
+                profileImage: document.getElementById("profileImagePreview").src
+            };
+
+            fetch("update-profile.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updatedData)
+            })
+            .then(response => response.text())
+            .then(result => {
+                document.getElementById("message").innerHTML = result;
+                localStorage.setItem("userData", JSON.stringify(updatedData)); // লোকাল স্টোরেজ আপডেট
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>

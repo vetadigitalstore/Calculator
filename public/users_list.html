@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User List</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f4f4;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      width: 95%;
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    h2 {
+      color: #333;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 600px;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+      white-space: nowrap;
+    }
+    th {
+      background: #2d912d;
+      color: white;
+    }
+    .profile-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #007bff;
+    }
+    .edit-btn, .delete-btn, .add-btn {
+      padding: 6px 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 4px;
+    }
+    .edit-btn {
+      background: #007bff;
+      color: white;
+    }
+    .delete-btn {
+      background: #dc3545;
+      color: white;
+    }
+    .add-btn {
+      background: #28a745;
+      color: white;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>User List</h2>
+    <button class="add-btn" onclick="addUser()">+ Add New User</button>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Profile</th>
+            <th>Name</th>
+            <th>Date of Birth</th>
+            <th>Gender</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Balance</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    async function loadUsers() {
+      let response = await fetch("list_users.php");
+      let users = await response.json();
+      let tableBody = document.getElementById("userTableBody");
+      tableBody.innerHTML = "";
+
+      if (users.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="9">No Users Found</td></tr>`;
+        return;
+      }
+
+      users.forEach(user => {
+        let row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${user.id}</td>
+          <td>
+            <img class="profile-img" src="${user.profileImage}" alt="${user.name}" onerror="this.onerror=null;this.src='image/logo.svg';">
+          </td>
+          <td>${user.name}</td>
+          <td>${user.dob ? user.dob : "-"}</td>
+          <td>${user.gender ? user.gender : "-"}</td>
+          <td>${user.email}</td>
+          <td>${user.mobile}</td>
+          <td>${user.balance}</td>
+          <td>
+            <button class="edit-btn" onclick="editUser('${user.id}')">Edit</button>
+            <button class="delete-btn" onclick="deleteUser('${user.id}')">Delete</button>
+          </td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+    }
+
+    async function addUser() {
+      let name = prompt("Enter new user name:");
+      let dob = prompt("Enter Date of Birth (YYYY-MM-DD):");
+      let gender = prompt("Enter Gender:");
+      let email = prompt("Enter user email:");
+      let mobile = prompt("Enter user mobile:");
+      let balance = prompt("Enter user balance:");
+      if (!name || !dob || !gender || !email || !mobile || !balance) {
+        alert("All fields are required!");
+        return;
+      }
+
+      let response = await fetch("add_user.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, dob, gender, email, mobile, balance })
+      });
+
+      let result = await response.json();
+      alert(result.message);
+      loadUsers();
+    }
+
+    async function editUser(id) {
+      let response = await fetch(`edit_user.php?id=${id}`);
+      let user = await response.json();
+
+      if (!user) {
+        alert("User not found!");
+        return;
+      }
+
+      let newName = prompt("Enter new name:", user.name);
+      let newDob = prompt("Enter new Date of Birth (YYYY-MM-DD):", user.dob);
+      let newGender = prompt("Enter new Gender:", user.gender);
+      let newEmail = prompt("Enter new email:", user.email);
+      let newMobile = prompt("Enter new mobile:", user.mobile);
+      let newBalance = prompt("Enter new balance:", user.balance);
+
+      if (!newName || !newDob || !newGender || !newEmail || !newMobile || !newBalance) {
+        alert("All fields are required!");
+        return;
+      }
+
+      let updateResponse = await fetch("edit_user.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, name: newName, dob: newDob, gender: newGender, email: newEmail, mobile: newMobile, balance: newBalance })
+      });
+
+      let result = await updateResponse.json();
+      alert(result.message);
+      loadUsers();
+    }
+
+    async function deleteUser(id) {
+      if (confirm("Are you sure you want to delete this user?")) {
+        let response = await fetch(`delete_user.php?id=${id}`, { method: "GET" });
+        let result = await response.json();
+        alert(result.message);
+        loadUsers();
+      }
+    }
+
+    loadUsers();
+  </script>
+</body>
+</html>
