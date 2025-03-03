@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>স্কয়ার মিলিমিটার ↔ স্কয়ার ফুট কনভার্টার</title>
+    <title>Square Millimeter ↔ Square Foot Converter</title>
     <style>
         * {
             margin: 0;
@@ -19,6 +19,7 @@
             height: 100vh;
         }
         .container {
+            position: relative;
             background: white;
             padding: 20px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
@@ -82,6 +83,20 @@
             font-weight: bold;
             color: #333;
         }
+        .back-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #007bff;
+            transition: 0.3s;
+        }
+        .back-btn:hover {
+            color: #0056b3;
+        }
         @media (max-width: 480px) {
             .container {
                 width: 90%;
@@ -92,25 +107,26 @@
 <body>
 
     <div class="container">
-        <h2>স্কয়ার মিলিমিটার ↔ স্কয়ার ফুট কনভার্টার</h2>
+        <button class="back-btn" onclick="goBack()">&#8592;</button>  
+        <!-- ← এই আইকনটি ব্যাক বোতাম হিসাবে কাজ করবে -->
+
+        <h2>Square Millimeter ↔ Square Foot Converter</h2>
         
         <div class="result-box" id="resultBox">
             <p class="result-text" id="result"></p>
         </div>
 
         <div class="input-group">
-            <label for="sqmm">স্কয়ার মিলিমিটার (mm²):</label>
+            <label for="sqmm">Square Millimeter (mm²):</label>
             <input type="number" id="sqmm">
         </div>
 
         <div class="input-group">
-            <label for="sqft">স্কয়ার ফুট (ft²):</label>
+            <label for="sqft">Square Foot (ft²):</label>
             <input type="number" id="sqft">
         </div>
 
-        <button class="btn" onclick="convertValues()">রেজাল্ট দেখাও</button>
-
-        
+        <button class="btn" onclick="convertValues()">Submit</button>
     </div>
 
     <script>
@@ -129,11 +145,15 @@
                 resultText = `${sqft} ft² = ${convertedSqmm} mm²`;
                 document.getElementById("sqmm").value = convertedSqmm;
             } else {
-                resultText = "অনুগ্রহ করে একটি মান প্রদান করুন।";
+                resultText = "Please enter a value.";
             }
 
             document.getElementById("result").innerText = resultText;
             resultBox.style.display = "block";
+        }
+
+        function goBack() {
+            window.history.back();
         }
     </script>
 
