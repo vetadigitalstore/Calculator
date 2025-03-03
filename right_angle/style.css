@@ -1,0 +1,315 @@
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Body Styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark Mode */
+body.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+/* Container */
+.container {
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 100%;
+  max-width: 600px;
+  overflow: hidden;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  border: 2px solid #ccc;
+}
+
+body.dark-mode .container {
+  background-color: #333;
+  border-color: #444;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  margin-top: -15mm; /* পুরো পেজ ২০ মিমি উপরে যাবে */
+}
+
+/* Headings */
+h1 {
+  margin-bottom: 20px;
+  font-size: 1.8em;
+  color: #333;
+}
+
+/* Logo Section */
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+/* Image Section */
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.triangle-image {
+  width: 250px;
+  height: 250px;
+  border-radius: 10px;
+}
+
+/* Results Section */
+#results {
+  background: #e9ecef;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 20px;
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  border: 2px solid #000;
+}
+
+/* Form Section */
+form {
+  margin-top: 5px;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1.1em;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+body.dark-mode input {
+  border-color: #444;
+}
+
+/* Triangle Form */
+#triangle-form {
+  border: 2px solid #000;
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+/* Buttons */
+button, #triangle-form button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1.2em;
+  margin-top: 20px;
+  transition: background 0.3s;
+}
+
+button:hover, #triangle-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Mode Toggle Button */
+#mode-toggle {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #ffeb3b;
+  color: #000;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#mode-toggle:hover {
+  background-color: #fbc02d;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  input, button {
+    font-size: 1em;
+    padding: 8px;
+  }
+
+  #results {
+    font-size: 1.1em;
+    background-color: #f9f9f9;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.2em;
+  }
+
+  input, button {
+    font-size: 0.9em;
+    padding: 6px;
+  }
+
+  #results {
+    font-size: 25px;
+  }
+}
+
+/* SVG Animations */
+svg {
+  width: 250px;
+  height: 250px;
+  margin-bottom: 20px;
+  background-color: black;
+  animation: openLogo 4s ease-out forwards;
+}
+
+/* Triangle Animation */
+@keyframes triangleAnimation {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+polygon {
+  animation: triangleAnimation 3s ease-in-out forwards;
+}
+
+/* Circle Animation */
+@keyframes circleRotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+circle {
+  animation: circleRotation 4s ease-in-out forwards;
+  transform-origin: center;
+}
+
+/* Typing Effect */
+@keyframes typingEffect {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  100% {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+.label {
+  position: absolute;
+  font-size: 10px;
+  font-family: Arial;
+  fill: white;
+  opacity: 0;
+  width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  animation: typingEffect 2s steps(20) 1s forwards;
+}
+
+.label:nth-child(1) {
+  animation-delay: 1s;
+}
+
+.label:nth-child(2) {
+  animation-delay: 2s;
+}
+
+.label:nth-child(3) {
+  animation-delay: 3s;
+}
+
+.label:nth-child(4) {
+  animation-delay: 4s;
+}
+
+/* Custom Logo Styling */
+#custom-logo .label {
+  font-size: 12px;
+  fill: white;
+  font-family: Arial, sans-serif;
+}
+
+#custom-logo text {
+  pointer-events: none;
+}
+
+/* Back Icon Styles */
+.back-icon {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #000;
+}
+
+.back-icon a {
+  text-decoration: none;
+  color: #000;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
+.back-icon a i {
+  margin-right: 8px;
+}
+
+.back-icon a:hover {
+  color: #007BFF;
+}

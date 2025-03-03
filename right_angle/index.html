@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>(VETA) Right Angle Triangle Calculator</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Font Awesome CDN for the icon -->
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    rel="stylesheet"
+  />
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- Back Icon Section (Clickable to go back to the previous page) -->
+    <div class="back-icon">
+      <a href="javascript:history.back()"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+
+    <!-- Logo Section (Circular Logo) -->
+    <h1>(VETA) Right Angle Triangle Calculator</h1>
+
+    <!-- Image Section (Image above Calculator) -->
+    <div class="image-container">
+      <svg id="custom-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <rect width="100" height="100" fill="black"/>
+        <polygon points="10,90 10,10 90,90" stroke="white" fill="none" stroke-width="5"/>
+        <circle cx="10" cy="90" r="20" stroke="white" fill="none" stroke-width="5"/>
+        <text x="14" y="55" class="label">A</text>
+        <text x="45" y="85" class="label">B</text>
+        <text x="62" y="55" class="label">C</text>
+        <text x="14" y="85" class="label">D</text>
+      </svg>
+    </div>
+
+    <!-- Results Section - This will display the results first -->
+    <div id="results"></div>
+
+    <!-- Input Form -->
+    <form id="triangle-form">
+      <label for="A"></label>
+      <input type="number" id="A" placeholder="Enter value for A..." step="any">
+      <label for="B"></label>
+      <input type="number" id="B" placeholder="Enter value for B..." step="any">
+      <label for="C"></label>
+      <input type="number" id="C" placeholder="Enter C length" step="any">
+      <label for="angle"></label>
+      <input type="number" id="angle" placeholder="Enter angle in degrees" step="any">
+      <button type="button" id="calculate">Calculate</button>
+    </form>
+
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
